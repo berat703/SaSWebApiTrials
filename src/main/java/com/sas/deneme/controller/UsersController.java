@@ -1,12 +1,15 @@
 package com.sas.deneme.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sas.deneme.Dto.UsersDto;
 import com.sas.deneme.Services.UsersService;
 import com.sas.deneme.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,16 +24,18 @@ public class UsersController {
         return this.userService.getAll();
     }
 
+    @ResponseBody
     @RequestMapping(method= RequestMethod.POST)
-    public void addUser(UsersDto usersDto){
-        Users users = new Users();
-        users.setUsername(usersDto.getUsername());
-        users.setName(usersDto.getName());
-        users.setSurname(usersDto.getSurname());
-        users.setEmail(usersDto.getEmail());
-        users.setPassword(usersDto.getPassword());
-        users.setSuperUser(false);
-        userService.save(users);
+    public ResponseEntity addUser(@RequestBody String jsonUser){
+        try{
+            Users user = new ObjectMapper().readValue(jsonUser,Users.class);
+            this.userService.save(user);
+
+       }catch (Exception e){
+
+           return null;
+       }
+       return ResponseEntity.ok(HttpStatus.OK);
     }
 
 }

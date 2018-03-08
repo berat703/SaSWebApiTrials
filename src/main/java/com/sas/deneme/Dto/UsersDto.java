@@ -2,9 +2,10 @@ package com.sas.deneme.Dto;
 
 import com.sas.deneme.model.Users;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class UsersDto {
+public class UsersDto implements Serializable{
 
     private Integer id;
     private String name;
